@@ -20,6 +20,13 @@ class WebServerTest < Minitest::Test
     super
   end
 
+  def setup
+    # before each test, pause for a second to give the
+    # web server time to close the connection from the
+    # prior request
+    sleep(1)
+  end
+
   def test_index_html
     res = Net::HTTP.get(URL, '/index.html', PORT)
     res = res.split.join(' ')
@@ -71,11 +78,11 @@ class WebServerTest < Minitest::Test
     fname = 'ksl_watcher.css'
 
     assert(File.exist?(fname))
-    
+
     parser = Parser.new
     parser.load_file!(fname)
-    
-    # nice-box class 
+
+    # nice-box class
     assert(parser.find_by_selector('.nice-box').count == 1)
 
     # margins for nice-box = 20
